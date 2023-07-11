@@ -14,14 +14,13 @@ lTrackMoves =  False	 ### True = Knight / False = SolidColor
 ###-------------------
 ### WINDOW SIZE
 
-moveX  = 200 moveY	= 100		### Open Window on Screen Position
-sizeX  = 800 sizeY	= 820		### Size of Window
+sizeX  = 800 sizeY	= 600		### Size of Window
 
 hSize	= 8 +2 +2	### Size of array, Display -4 smaller
 vSize	= 8 +2 +2	### Size of array, Display -4 smaller
 
-h	= 0	### H-coord of Cell
-v	= 0	### V-coord of Cell
+h	= 0	### Horizontal coordinate of Cell
+v	= 0	### Vertical coordinate of Cell
 
 
 ###----------------------------------------------------------
@@ -39,21 +38,25 @@ LayoutButtonRow			= null
  
 Knight	  = AppFile("knight.png")
 oKnight	  = new QPixmap(Knight)
-bWidth	  = oKnight.width()	  ### 50 
-bHeight	  = oKnight.height()	  ### 50
+bWidth	  = oKnight.width()	  	### 50 
+bHeight	  = oKnight.height()	### 50
 nMoves	  = 0 
 
 oldH = 0
 oldV = 0
  
 C_Spacing  = 2
+C_ButtonIconWidth  = 60
+C_ButtonIconHeight = 60
+C_ButtonMinWidth   = 80
+C_ButtonMinHeight  = 80
 C_ButtonFirstStyle	= 'border-radius:1px; color:black; background-color: rgb(229,249,203) ;'+
 			  'border-style: outset; border-width: 2px; border-radius: 2px; border-color: gray;'
 C_ButtonSecondStyle	= 'border-radius:1px; color:black; background-color: rgb(179,200,93); '+
 			  'border-style: outset; border-width: 2px; border-radius: 2px; border-color: darkGray; '
 
 			  
-animationDelay = 0.5	###	 Sleep 1 sec bewteen Computer Moves display
+animationDelay = 0.5	###	 Sleep 1 second between Computer Moves display
 	
 ###=============================================================================
 ###=============================================================================
@@ -78,7 +81,7 @@ app = new qApp
 
 ###---------------------------------------------------------------------------
 ### Layout the Grid Square, Create the Arrays
-### workWidget items need to be made Global. Mke available toother functions
+### workWidget items need to be made Global. Make available to other functions
 
 Func DrawWidget()
 	 
@@ -98,7 +101,6 @@ Func DrawWidget()
 		workHeight = workWidget.height()
 		fontSize   = 8 + (workHeight / 100)
 		
-		  move(moveX, moveY)
 		resize(sizeX, sizeY)
 	 
 
@@ -219,10 +221,12 @@ Func DrawWidget()
 						ok
 						setClickEvent("UserLeftClick(" + string(Row) +
 								 "," + string(Col) + ")")	
-						setSizePolicy(1,1)									
+						setSizePolicy(1,1)		
+						setMinimumWidth(C_ButtonMinWidth)
+						setMinimumHeight(C_ButtonMinHeight)														
 					}
 					
-				### Widget - Add HORZ BOTTON
+				### Widget - Add HORIZONTAL BUTTON
 					LayoutButtonRow[Row].AddWidget(aButton[Row][Col])	
 			next
 			odd++
@@ -356,15 +360,16 @@ Func ClearOldMove()
 				nImageHeight = Height() - 65	
 				oMine = new qpixmap(Knight)
 				setIcon(new qIcon(oMine))
-				setIconSize(new qSize(nImageWidth, nImageHeight))
 				setFont(new qFont("Calibri",14,100,0))
-				setText(""+ nMoves)			
+				setText(""+ nMoves)		
+				setIconSize(new qSize(C_ButtonIconWidth, C_ButtonIconHeight))	
 			else								### False show Solid Color
 				oMine = new qpixmap2(0,0)
 				setIcon(new qIcon(oMine))
 				setStylesheet("background-color:rgb(64,128,128);")	### Color blind people have problem with rgb(0,255,100);") 
 				setFont(new qFont("Calibri",14,100,0))
 				setText(""+ nMoves)
+				setIconSize(new qSize(C_ButtonIconWidth, C_ButtonIconHeight))
 			ok
 		}	
 	ok
@@ -408,9 +413,9 @@ Func NewLocation(h,v)
 			nImageWidth	 = Width()	-24
 			nImageHeight = Height() -24		
 			oMine = new qpixmap(Knight)
-			oMine = oMine.scaled(nImageWidth , nImageHeight ,0,0)
+			//oMine = oMine.scaled(nImageWidth , nImageHeight ,0,0)
 			setIcon(new qIcon(oMine))
-			setIconSize(new qSize(nImageWidth, nImageHeight))
+			setIconSize(new qSize(C_ButtonIconWidth, C_ButtonIconHeight))
 		}		
 	
 
@@ -430,7 +435,9 @@ Func ValidMove( oldH, oldV, h, v)
 	PosMove	 = [[-2,-1],[-2,1],[-1,2],[1,2],[2,1],[2,-1],[1,-2],[-1,-2]] 
 	
 	FlagValidMove = 0
-	TitleKnightInvalidMove.setText(" Msg:  Invalid Move ")
+	if Not (oldH=0 and oldV=0) 
+		TitleKnightInvalidMove.setText(" Msg:  Invalid Move ")
+	ok
 	
 	for i = 1 to 8
 		if h = oldH + PosMove[i][1] AND	 v = oldV + PosMove[i][2]
@@ -535,7 +542,7 @@ while k <= cbx * cby
 		ok	
 	next	   
 
-	###	 -- Warnsdorff�s algorithmus;	extended
+	###	 -- Warnsdorff’s algorithms;	extended
 	###		Move to the neighbor that has min number of available neighbors
 	###		Randomization:	we could take it - or not
 	
@@ -596,7 +603,7 @@ while k <= cbx * cby
 	
 end ### while
 
-### end pgm	  **************************************
+### end program ************************************
 
 ###-------------------------------------------------
 ### Control output:
